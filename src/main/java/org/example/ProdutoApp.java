@@ -12,7 +12,8 @@ public class ProdutoApp {
             System.out.println("\n--- Menu ---");
             System.out.println("1. Cadastrar Produto");
             System.out.println("2. Consultar Produto");
-            System.out.println("3. Sair");
+            System.out.println("3. Excluir Produto");
+            System.out.println("4. Sair");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
             scanner.nextLine(); // Consumir a quebra de linha
@@ -25,19 +26,25 @@ public class ProdutoApp {
                     consultarProduto(scanner);
                     break;
                 case 3:
+                    inativarProduto(scanner);
+                    break;
+                case 4:
                     System.out.println("Saindo...");
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
             }
-        } while (opcao != 3);
+        } while (opcao != 4);
 
         scanner.close();
     }
 
     private static void inativarProduto(Scanner scanner) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'inativarProduto'");
+        System.out.println("Digite o ID do produto: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        produtoDAO.desativarProduto(id);
     }
 
     private static void cadastrarProduto(Scanner scanner) {

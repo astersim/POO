@@ -48,4 +48,7 @@ public class Pedido {
                 ", status='" + status + '\'' +
                 '}';
     }
+
+    public int getId() { return id;
+    }
 }

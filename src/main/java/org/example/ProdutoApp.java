@@ -13,7 +13,8 @@ public class ProdutoApp {
             System.out.println("1. Cadastrar Produto");
             System.out.println("2. Consultar Produto");
             System.out.println("3. Excluir Produto");
-            System.out.println("4. Sair");
+            System.out.println("4. Alterar Produto");
+            System.out.println("5. Sair");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
             scanner.nextLine(); // Consumir a quebra de linha
@@ -29,12 +30,15 @@ public class ProdutoApp {
                     inativarProduto(scanner);
                     break;
                 case 4:
+                    alterarProduto(scanner);
+                    break;
+                case 5:
                     System.out.println("Saindo...");
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
             }
-        } while (opcao != 4);
+        } while (opcao != 5);
 
         scanner.close();
     }
@@ -50,11 +54,13 @@ public class ProdutoApp {
     private static void cadastrarProduto(Scanner scanner) {
         System.out.print("Digite o nome do produto: ");
         String nome = scanner.nextLine();
+        System.out.print("Digite a marca do produto: ");
+        String marca = scanner.nextLine();
         System.out.print("Digite o preço do produto: ");
         double preco = scanner.nextDouble();
         scanner.nextLine(); // Consumir a quebra de linha
 
-        Produto produto = new Produto(nome, preco);
+        Produto produto = new Produto(nome, preco, marca);
         produtoDAO.cadastrarProduto(produto);
     }
 
@@ -69,5 +75,21 @@ public class ProdutoApp {
         } else {
             System.out.println("Produto com ID " + id + " não encontrado.");
         }
+    }
+
+    private static void alterarProduto(Scanner scanner) {
+        System.out.print("Digite o ID do produto que deseja alterar: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Consumir a quebra de linha
+
+        System.out.print("Digite o novo preço do produto: ");
+        double preco = scanner.nextDouble();
+        scanner.nextLine(); // Consumir a quebra de linha
+
+        System.out.print("Digite a nova marca do produto: ");
+        String marca = scanner.nextLine();
+
+        Produto produto = new Produto(id, null, preco, marca, 1);
+        produtoDAO.alterarProduto(produto);
     }
 }

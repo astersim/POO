@@ -7,23 +7,28 @@ public class Usuario {
     private String endereco;
     private String telefone;
     private String profissao;
+    private int status;
 
-    public Usuario(int id, String nome, String email, String endereco, String telefone, String profissao) {
+    public Usuario(int id, String nome, String email, String endereco, String telefone, String profissao, int status) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.endereco = endereco;
         this.telefone = telefone;
         this.profissao = profissao;
+        this.status = status;
     }
 
-    public Usuario(String nome, String email, String endereco, String telefone, String profissao) {
+    public Usuario(String nome, String email, String endereco, String telefone, String profissao, int status) {
         this.nome = nome;
         this.email = email;
         this.endereco = endereco;
         this.telefone = telefone;
         this.profissao = profissao;
+        this.status = 1;
     }
+
+
 
     public String getNome() {
         return nome;
@@ -45,6 +50,10 @@ public class Usuario {
         return profissao;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +
@@ -56,4 +65,6 @@ public class Usuario {
                 ", profissao='" + profissao + '\'' +
                 '}';
     }
+
+    
 }

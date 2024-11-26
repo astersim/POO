@@ -8,12 +8,21 @@ public class ProdutoDAO {
         try (Connection conn = DriverManager.getConnection(URL)) {
             String sqlCreateTable = "CREATE TABLE IF NOT EXISTS produto ("
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + "nome TEXT NOT NULL,"
-                    + "preco REAL NOT NULL)";
+                    + "nome TEXT NOT NULL)"
+                    + "preco REAL NOT NULL)"
+                    + "marca TEXT NOT NULL";
             Statement stmt = conn.createStatement();
             stmt.execute(sqlCreateTable);
 
             String sqlAddColumn = "ALTER TABLE produto ADD COLUMN status INTERGER DEFAULT 1";
+            try {
+                stmt.execute(sqlAddColumn);
+            } catch (SQLException e) {
+                if (!e.getMessage().contains("duplicate column name: status")) {
+                    throw e;
+                }
+            }
+            String sqlAddNewColumn = "ALTER TABLE produto ADD COLUMN marca TEXT";
             try {
                 stmt.execute(sqlAddColumn);
             } catch (SQLException e) {
@@ -27,11 +36,12 @@ public class ProdutoDAO {
     }
 
     public void cadastrarProduto(Produto produto) {
-        String sqlInsert = "INSERT INTO produto(nome, preco) VALUES(?, ?)";
+        String sqlInsert = "INSERT INTO produto(nome, preco, marca) VALUES(?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sqlInsert)) {
             pstmt.setString(1, produto.getNome());
             pstmt.setDouble(2, produto.getPreco());
+            pstmt.setString(3, produto.getMarca());
             pstmt.executeUpdate();
             System.out.println("Produto cadastrado com sucesso!");
         } catch (SQLException e) {
@@ -54,7 +64,7 @@ public class ProdutoDAO {
                     return null;
                 }
 
-                return new Produto(rs.getInt("id"), rs.getString("nome"), rs.getDouble("preco"), status);
+                return new Produto(rs.getInt("id"), rs.getString("nome"), rs.getDouble("preco"), rs.getString("marca"), status);
             } else {
                 System.out.println("Produto nao encontrado");
             }
@@ -78,6 +88,24 @@ public class ProdutoDAO {
             }
         } catch (SQLException e) {
             System.out.println("Erro ao desativar produto: " + e.getMessage());
+        }
+    }
+
+    public void alterarProduto(Produto produto) {
+        String sqlUpdate = "UPDATE produto SET preco = ?, marca = ? WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(URL);
+             PreparedStatement pstmt = conn.prepareStatement(sqlUpdate)) {
+            pstmt.setDouble(1, produto.getPreco());
+            pstmt.setString(2, produto.getMarca());
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Produto alterado com sucesso!");
+            } else {
+                System.out.println("Produto não encontrado.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao alterar produto: " + e.getMessage());
         }
     }
 }
